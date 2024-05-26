@@ -1,60 +1,47 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-interface PageProps {
-  currentPage: number;
-}
+import Pagination from './Pagination';
+import Posts from './curr_page';
+import './styles.css';
 
 const POSTS_PER_PAGE = 10;
 const API_URL = 'http://localhost:3001/posts';
-//const totalPages = 9;
 
-interface Post {
-    id: number;
-    title: string;
-    author: string;
-    email: string;
-    content: string;
-}
-
-const HomePage: React.FC<PageProps>  = ({currentPage}) => {
-    const [posts, setPosts] = useState<Post[]>([]);
+const App = () => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [numOfPages, setTotalPages] = useState(1);
 
     useEffect(() => {
-        const start_index = (currentPage-1)*POSTS_PER_PAGE
-        const end_index = (currentPage)*POSTS_PER_PAGE
-        const fetchPosts = async () => {
+        const fetchTotalCount = async () => {
             try {
-                const response = await axios.get(`${API_URL}?_start=${start_index}&_end=${end_index}}`);
-                setPosts(response.data);
-                console.log("number of posts"+response.headers['x-total-count']);
-                console.log(parseInt(response.headers['x-total-count']));
-
+                const response = await axios.get(`${API_URL}?_limit=${POSTS_PER_PAGE}`);
+                const totalCount = response.headers["x-total-count"];
+                setTotalPages(Math.ceil(parseInt(totalCount)/POSTS_PER_PAGE));
             } catch (error) {
-                console.error('Error fetching posts:', error);
+                console.error('Error fetching total count:', error);
             }
         };
 
-        fetchPosts();
-    }, [currentPage]);
+        fetchTotalCount();
+    }, []);
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
 
     return (
         <div>
-            <h1>Posts</h1>
-            <div>
-                {posts.map(post => (
-                    <div key={post.id} className="post" id={`${post.id}`}>
-                        <h2>{post.title}</h2>
-                        <small>By {post.author}</small>
-                        <br />
-                        {post.content}
-                    </div>
-                ))}
-            </div>
-           
+            <Posts currentPage={currentPage} postsPerPage ={POSTS_PER_PAGE}/>
+            <Pagination
+                currentPage={currentPage}
+                totalPages={numOfPages}
+                onPageChange={handlePageChange}
+            />
+       
         </div>
     );
 };
 
-export default HomePage;
+export default App;

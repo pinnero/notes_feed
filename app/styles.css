@@ -1,0 +1,86 @@
+/* styles.css */
+
+/* General styles for the entire app */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5;
+    color: #333;
+}
+
+/* Container for the posts and pagination */
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+}
+
+/* Post styling */
+.post {
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    transition: transform 0.2s;
+}
+
+.post:hover {
+    transform: scale(1.02);
+}
+
+.post h2 {
+    margin: 0 0 10px;
+    font-size: 24px;
+    color: #007bff;
+}
+
+.post small {
+    display: block;
+    margin-bottom: 10px;
+    color: #888;
+}
+
+.post p {
+    margin: 0;
+}
+
+/* Pagination styling */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    margin: 0 5px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.pagination button:hover {
+    background-color: #0056b3;
+}
+
+.pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.pagination button[disabled] {
+    font-weight: bold;
+}
+
+.pagination button:not(:disabled):hover {
+    transform: translateY(-2px);
+}
