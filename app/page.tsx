@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Pagination from './Pagination';
+interface PageProps {
+  currentPage: number;
+}
 
 const POSTS_PER_PAGE = 10;
 const API_URL = 'http://localhost:3001/posts';
@@ -16,10 +18,8 @@ interface Post {
     content: string;
 }
 
-const HomePage = () => {
+const HomePage: React.FC<PageProps>  = ({currentPage}) => {
     const [posts, setPosts] = useState<Post[]>([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
 
     useEffect(() => {
         const start_index = (currentPage-1)*POSTS_PER_PAGE
@@ -28,7 +28,6 @@ const HomePage = () => {
             try {
                 const response = await axios.get(`${API_URL}?_start=${start_index}&_end=${end_index}}`);
                 setPosts(response.data);
-                setTotalPages(Math.ceil(parseInt(response.headers['x-total-count']) / POSTS_PER_PAGE));
                 console.log("number of posts"+response.headers['x-total-count']);
                 console.log(parseInt(response.headers['x-total-count']));
 
@@ -39,10 +38,6 @@ const HomePage = () => {
 
         fetchPosts();
     }, [currentPage]);
-
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-    };
 
     return (
         <div>
@@ -57,19 +52,7 @@ const HomePage = () => {
                     </div>
                 ))}
             </div>
-            <div>
-                <button name="first" onClick={() => handlePageChange(1)} disabled={currentPage === 1}>First  </button>
-                <button name="previous" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Previous  </button>
-                <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-            />
-                <button name="next" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>Next  </button>
-                <button name="last" onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages}>Last  </button>
-            </div>
-            <h3>{currentPage}</h3>
-            <h3>{totalPages}</h3>
+           
         </div>
     );
 };

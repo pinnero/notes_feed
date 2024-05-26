@@ -19,7 +19,7 @@ const App = () => {
             console.error('Error fetching posts:', error);
         }
     };
-    const TotalPages = calculatePagesNum();
+    const totalPages = calculatePagesNum();
 
 
     const handlePageChange = (page: number) => {
@@ -28,19 +28,13 @@ const App = () => {
 
     return (
         <div>
-            
-                <button name="first" onClick={() => handlePageChange(1)} disabled={currentPage === 1}>First  </button>
-                <button name="previous" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Previous  </button>
-                <Pagination
+            <HomePage currentPage={currentPage}/>
+            <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={handlePageChange}
             />
-                <button name="next" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>Next  </button>
-                <button name="last" onClick={() => handlePageChange(totalPages)} disabled={currentPage === totalPages}>Last  </button>
-            </div>
-            <h3>{currentPage}</h3>
-            <h3>{totalPages}</h3>
+       
         </div>
     );
 };
