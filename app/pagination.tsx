@@ -44,7 +44,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
     const pageNumbers = getPageNumbers();
 
     return (
-        <div>
+        <div className="pagination">
             <button name="first" onClick={() => onPageChange(1)} disabled={currentPage === 1}>First  </button>
             <button name="previous" onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1}>Previous  </button>
             {pageNumbers.map(page => (

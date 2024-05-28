@@ -5,8 +5,14 @@ body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f0f2f5;
+    background-color: #c8e6f0;
     color: #333;
+}
+
+.allPosts h1 {
+    font-size: 50px;
+    margin-left: 1%;
+    color: #003000;
 }
 
 /* Container for the posts and pagination */
@@ -27,10 +33,13 @@ body {
     border-radius: 10px;
     background-color: #f9f9f9;
     transition: transform 0.2s;
+    text-align: center;
+    width: 90%;
+    margin-left: 3.7%;
 }
 
 .post:hover {
-    transform: scale(1.02);
+    transform: scale(1.03);
 }
 
 .post h2 {
@@ -62,7 +71,7 @@ body {
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
-    background-color: #007bff;
+    background-color: #9930ff;
     color: #fff;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s;

@@ -35,8 +35,8 @@ const Posts: React.FC<PageProps>  = ({currentPage}) => {
     }, [currentPage]);
 
     return (
-        <div>
-            <h1>Posts {currentPage}</h1>
+        <div className="allPosts">
+            <h1>Posts</h1>
             <div>
                 {posts.map(post => (
                     <div key={post.id} className="post" id={`${post.id}`}>

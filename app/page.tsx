@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Pagination from './Pagination';
+import Pagination from './pagination';
 import Posts from './curr_page';
 import './styles.css';
 
@@ -33,7 +33,7 @@ const App = () => {
 
     return (
         <div>
-            <Posts currentPage={currentPage} postsPerPage ={POSTS_PER_PAGE}/>
+            <Posts currentPage={currentPage} />
             <Pagination
                 currentPage={currentPage}
                 totalPages={numOfPages}
