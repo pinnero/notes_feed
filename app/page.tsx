@@ -7,7 +7,7 @@ import Posts from './curr_page';
 import './styles.css';
 
 const POSTS_PER_PAGE = 10;
-const API_URL = 'http://localhost:3001/posts';
+const API_URL = 'http://localhost:3001/notes';
 
 const App = () => {
     const [currentPage, setCurrentPage] = useState(1);

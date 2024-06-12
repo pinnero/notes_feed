@@ -7,13 +7,17 @@ interface PageProps {
 }
 
 const POSTS_PER_PAGE = 10;
-const API_URL = 'http://localhost:3001/posts';
+const API_URL = 'http://localhost:3001/notes';
+
+interface Author {
+    name: string;
+    email: string;
+}
 
 interface Post {
     id: number;
     title: string;
-    author: string;
-    email: string;
+    author: Author;
     content: string;
 }
 
@@ -41,7 +45,8 @@ const Posts: React.FC<PageProps>  = ({currentPage}) => {
                 {posts.map(post => (
                     <div key={post.id} className="post" id={`${post.id}`}>
                         <h2>{post.title}</h2>
-                        <small>By {post.author}</small>
+                        <small>Posted by: {post.author.name}</small>
+                        <small>mail: {post.author.email}</small>
                         <br />
                         {post.content}
                     </div>
