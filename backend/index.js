@@ -60,9 +60,9 @@ app.get('/notes', async (req, res) => {
 
 app.get('/notes/:id', async (req, res) => {
     try {
-        const index = parseInt(req.params.index, 10);
+        const index = parseInt(req.params.id, 10) - 1;
         const note = await Note.find().skip(index).limit(1);
-        if (!note) {
+        if (note.length === 0 || !note) {
             return res.status(404).json({ error: 'Note not found' });
         }
         res.json(note);
@@ -94,7 +94,7 @@ app.put('/notes/:id', async (req, res) => {
     };
 
     try {
-        const index = parseInt(req.params.id, 10);
+        const index = parseInt(req.params.id, 10) - 1;
         const notes = await Note.find().skip(index).limit(1);
         if(notes.length === 0){
             return res.status(404).json({ message: 'Note not found' });
@@ -112,7 +112,7 @@ app.put('/notes/:id', async (req, res) => {
 
 app.delete('/notes/:id', async (req, res) => {
     try {
-        const index = parseInt(req.params.id, 10);
+        const index = parseInt(req.params.id, 10) - 1;
         const notes = await Note.find().skip(index).limit(1);
         if(notes.length === 0){
             return res.status(404).json({ message: 'Note not found' });
@@ -122,7 +122,7 @@ app.delete('/notes/:id', async (req, res) => {
         if (result.deletedCount === 0) {
             return res.status(404).json({ message: 'Note not found' });
         }
-        res.json({ message: 'Note deleted' });
+        res.status(204).send();
     } catch (error) {
         res.status(500).json({ error: 'Error deleting note' });
     }

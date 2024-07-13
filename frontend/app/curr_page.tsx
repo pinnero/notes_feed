@@ -75,7 +75,7 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
                         note={note} 
                         onUpdate={handleNoteUpdate} 
                         onDelete = {handleDeleteNote}
-                        dbIndex = {index+(currentPage-1)*10}
+                        dbIndex = {(index + (currentPage-1)*10) + 1}
                       />
                 ))}
             </div>

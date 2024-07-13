@@ -65,7 +65,7 @@ const AddNote: React.FC<AddNoteProps> = ({ onAdd, onCancel}) => {
     return (
         <div className="addNote" >
             <h2>Add New Note</h2>
-            <form onSubmit={handleSubmit} name="text_input_new_note">
+            <form onSubmit={handleSubmit}>
                 <div>
                     <label>Title:</label>
                     <input
@@ -96,6 +96,7 @@ const AddNote: React.FC<AddNoteProps> = ({ onAdd, onCancel}) => {
                 <div>
                     <label>Content:</label>
                     <textarea
+                        name="text_input_new_note"
                         value={content}
                         onChange={handleContentChange}
                         required
