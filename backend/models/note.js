@@ -6,7 +6,7 @@ const noteSchema = new mongoose.Schema({
     author : {
         name: String,
         email: String
-    } | null,
+    },
     content: String,
 });
 

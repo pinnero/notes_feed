@@ -21,3 +21,5 @@ router.post('/', async (req, res) => {
         res.status(500).json({ error: 'Error occured while trying to log in' });
     }
 });
+
+export default router; 

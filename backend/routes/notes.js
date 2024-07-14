@@ -149,3 +149,6 @@ router.get('/count', async (req, res) => { // TODO: change in frontend
         res.status(500).json({ error: 'Error fetching total notes count' });
     }
 });
+
+export default router; 
+
