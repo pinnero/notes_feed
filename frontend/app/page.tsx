@@ -8,7 +8,7 @@ import './styles.css';
 import { ThemeContext } from './Theme';
 
 const NOTES_PER_PAGE = 10;
-const API_URL_notesCount = 'http://localhost:3001/notesCount';
+const API_URL_notesCount = 'http://localhost:3001/notes/count';
 
 const App = () => {
     const [numOfPages, setNumOfPages] = useState(1);
@@ -73,7 +73,8 @@ const App = () => {
                 <Curr_page 
                     currentPage= {currentPage}
                     handleDelete = {handleRemoveNote} 
-                    addNoteCount = {addNoteCount}  
+                    addNoteCount = {addNoteCount}
+                    totalPages={numOfPages}
                 />
                 <Pagination
                     currentPage={currentPage}

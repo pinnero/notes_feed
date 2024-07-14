@@ -10,6 +10,8 @@ const API_URL = 'http://localhost:3001/notes';
 interface AddNoteProps {
     onAdd: () => void; 
     onCancel: () => void;
+    nameOfUser: string;
+    emailOfUser: string;
 }
 
 const uuidToInt = (uuid: string) => {
@@ -18,15 +20,12 @@ const uuidToInt = (uuid: string) => {
     return bigInteger;
   };
 
-const AddNote: React.FC<AddNoteProps> = ({ onAdd, onCancel}) => {
+const AddNote: React.FC<AddNoteProps> = ({ onAdd, onCancel, nameOfUser, emailOfUser}) => {
     const [title, setTitle] = useState('');
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+    const [name, setName] = useState(nameOfUser);
+    const [email, setEmail] = useState(emailOfUser);
     const [content, setContent] = useState('');
 
-    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setName(e.target.value);
-    };
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value);
@@ -36,9 +35,6 @@ const AddNote: React.FC<AddNoteProps> = ({ onAdd, onCancel}) => {
         setContent(e.target.value);
     };
 
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.target.value);
-    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -80,7 +76,6 @@ const AddNote: React.FC<AddNoteProps> = ({ onAdd, onCancel}) => {
                     <input
                         type="text"
                         value={name}
-                        onChange={handleNameChange}
                         required
                     />
                 </div>
@@ -89,7 +84,6 @@ const AddNote: React.FC<AddNoteProps> = ({ onAdd, onCancel}) => {
                     <input
                         type="email"
                         value={email}
-                        onChange={handleEmailChange}
                         required
                     />
                 </div>

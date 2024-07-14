@@ -17,9 +17,10 @@ interface NoteProps {
     onUpdate: () => void; 
     onDelete: () => void;
     dbIndex: number;
+    nameOfUser: string;
 }
 
-const Note: React.FC<NoteProps> = ({ note, onUpdate, onDelete, dbIndex}) => {
+const Note: React.FC<NoteProps> = ({ note, onUpdate, onDelete, dbIndex, nameOfUser}) => {
     const [editing, setEditing] = useState(false);
     const [editedContent, setEditedContent] = useState(note.content);
     const theme  = useContext(ThemeContext);
@@ -79,8 +80,13 @@ const Note: React.FC<NoteProps> = ({ note, onUpdate, onDelete, dbIndex}) => {
             ) : (
                 <div>
                     <p>{note.content}</p>
-                    <button onClick={handleEdit} name={`edit-${dbIndex}`}>Edit</button>
-                    <button onClick={handleDelete} name={`delete-${dbIndex}`}>Delete</button>
+                    {nameOfUser === note.author.name && 
+                        <div>
+                            <button onClick={handleEdit} name={`edit-${dbIndex}`}>Edit</button>
+                            <button onClick={handleDelete} name={`delete-${dbIndex}`}>Delete</button>
+                        </div>
+                    }
+                    
                 </div>
             )}
         </div>
