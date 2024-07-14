@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import fs from 'fs';
 import 'dotenv/config';
+import Note from './models/note.js';
+import User from './models/user.js';
 
 const MONGODB_URL = process.env.MONGODB_CONNECTION_URL;
 const app = express();
@@ -32,18 +34,6 @@ mongoose.connect(MONGODB_URL)
     });
 })
 .catch((err) => console.error('Error connecting to MongoDB:', err));
-
-const noteSchema = new mongoose.Schema({
-    id: Number,
-    title: String,
-    author : {
-        name: String,
-        email: String
-    },
-    content: String
-});
-
-const Note = mongoose.model('Note', noteSchema);
 
 const NOTES_PER_PAGE = 10;
 
