@@ -71,7 +71,7 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
     };
 
     const fetchNotesFromServer = () => {
-        let pagesToFetch = [];
+        let pagesToFetch: number[] = [];
         if (totalPages <= 5) {
             return Array.from({ length: totalPages }, (_, index) => index + 1);
         } else if (currentPage < 3) {
@@ -164,6 +164,8 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
     const handleCreateUser = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
+            console.log('Sent data:', { name, email, userName, password });
+
             await axios.post('http://localhost:3001/users', {
                 name,
                 email,
@@ -183,11 +185,12 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:3001/login', {
-                userName: userName,
-                password: password,
+                userName: userNameLogin,
+                password: passwordLogin,
             });
             setToken(response.data.token);
             setActiveName(response.data.name);
+            console.log(response.data.name);
             setActiveEmail(response.data.email);
         } catch (error) {
             console.error('Error logging in:', error);
@@ -299,7 +302,8 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
                             onAdd = {handleAddNote} 
                             onCancel = {handleCancelNote}
                             nameOfUser = {activeName}
-                            emailOfUser = {activeEmail}/>  :  <button  onClick={()=>setShowAddNote(!showAddNote)} 
+                            emailOfUser = {activeEmail}
+                            token = {token}/>  :  <button  onClick={()=>setShowAddNote(!showAddNote)} 
                             name="add_new_note">Add Note</button>
                         )
                     }

@@ -12,6 +12,7 @@ interface AddNoteProps {
     onCancel: () => void;
     nameOfUser: string;
     emailOfUser: string;
+    token: string;
 }
 
 const uuidToInt = (uuid: string) => {
@@ -20,7 +21,7 @@ const uuidToInt = (uuid: string) => {
     return bigInteger;
   };
 
-const AddNote: React.FC<AddNoteProps> = ({ onAdd, onCancel, nameOfUser, emailOfUser}) => {
+const AddNote: React.FC<AddNoteProps> = ({ onAdd, onCancel, nameOfUser, emailOfUser, token}) => {
     const [title, setTitle] = useState('');
     const [name, setName] = useState(nameOfUser);
     const [email, setEmail] = useState(emailOfUser);
@@ -47,7 +48,10 @@ const AddNote: React.FC<AddNoteProps> = ({ onAdd, onCancel, nameOfUser, emailOfU
                     email: email,
                 },
                 content,
-            });
+            },  {
+                headers: {
+                'Authorization': `Bearer ${token}` // Add the token to the headers
+            }});
             setName('');
             setContent('');
             setTitle('');

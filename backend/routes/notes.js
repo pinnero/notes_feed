@@ -12,7 +12,7 @@ const verifyToken = (req) => {
         throw new Error('No token provided');
     }
 
-    const token =authHeader.split(' ')[1]; // extract the token itself (remove the bearer word)
+    const token =tokenHeader.split(' ')[1]; // extract the token itself (remove the bearer word)
     try {
         const userData = jwt.verify(token, SECRET); // TODO - check if we need to extract data from the tokens payload. 
         if( req.body.author.name !== userData.name){
@@ -70,6 +70,7 @@ router.post('/', async (req, res) => {
             res.status(403).json({ error: 'Forbidden: user dont have the permissions to add note with different name' });
         }
         else {
+            console.log(error.message)
             res.status(500).json({ error: 'Error saving note' });
         }
     }
@@ -138,15 +139,6 @@ router.delete('/:id', async (req, res) => {
         else {
             res.status(500).json({ error: 'Error deleting note' });
         }
-    }
-});
-
-router.get('/count', async (req, res) => { // TODO: change in frontend 
-    try {
-        const count = await Note.countDocuments();
-        res.json({ totalNotes: count });
-    } catch (error) {
-        res.status(500).json({ error: 'Error fetching total notes count' });
     }
 });
 

@@ -6,6 +6,7 @@ import 'dotenv/config';
 import notesRouter from './routes/notes.js';
 import usersRouter from './routes/users.js';
 import loginRouter from './routes/login.js';
+import countNotesRouter from './routes/countNotes.js'
 
 
 const MONGODB_URL = process.env.MONGODB_CONNECTION_URL;
@@ -40,6 +41,8 @@ mongoose.connect(MONGODB_URL)
 app.use('/notes', notesRouter);
 app.use('/users', usersRouter);
 app.use('/login', loginRouter);
+app.use('/countNotes', countNotesRouter);
+
 
 
 

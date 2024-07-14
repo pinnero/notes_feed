@@ -8,7 +8,7 @@ import './styles.css';
 import { ThemeContext } from './Theme';
 
 const NOTES_PER_PAGE = 10;
-const API_URL_notesCount = 'http://localhost:3001/notes/count';
+const API_URL_notesCount = 'http://localhost:3001/countNotes';
 
 const App = () => {
     const [numOfPages, setNumOfPages] = useState(1);
