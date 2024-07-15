@@ -45,20 +45,28 @@ test.describe('Notes App', () => {
     await page.click('button[name="last"]');
     await page.waitForTimeout(1000);
 
-    const noteTitle = await page.locator(`h2.${NOTE.title}:text("${NOTE.title}")`);
-    await expect(noteTitle).toBeVisible();
+    const noteTitle = await page.locator(`h2:has-text("${NOTE.title}")`).last();
+     await expect(noteTitle).toBeVisible();
   });
 
   test('Edit Note', async ({ page }) => {
     await page.goto(BASE_URL);
     await page.fill('input[name="login_form_username"]', USER.username);
     await page.fill('input[name="login_form_password"]', USER.password);
-    await page.click('button[name="text_input_save_new_note"]');
+    await page.click('form[name="login_form"] button[type="submit"]');
 
-    const editButton = await page.locator(`button[name="edit-1"]`);
+    await page.click('button[name="add_new_note"]');
+    await page.fill('input[name="add_note_title"]', NOTE.title);
+    await page.fill('textarea[name="text_input_new_note"]', NOTE.content);
+    await page.click('button[name="text_input_save_new_note"]');
+    await page.waitForTimeout(1000);
+    await page.click('button[name="last"]');
+    await page.waitForTimeout(1000);
+
+    const editButton = page.locator('button', { hasText: 'Edit' }).last();
     await editButton.click();
 
-    const newContent = 'Updated note content.';
+    const newContent = 'New content for the note.';
     await page.fill('textarea[name="text_input-1"]', newContent);
     await page.click('button[name="text_input_save-1"]');
 
@@ -70,12 +78,20 @@ test.describe('Notes App', () => {
     await page.goto(BASE_URL);
     await page.fill('input[name="login_form_username"]', USER.username);
     await page.fill('input[name="login_form_password"]', USER.password);
-    await page.click('button[name="text_input_save_new_note"]');
+    await page.click('form[name="login_form"] button[type="submit"]');
 
-    const deleteButton = await page.locator(`button[name="delete-1"]`);
+    await page.click('button[name="add_new_note"]');
+    await page.fill('input[name="add_note_title"]', NOTE.title);
+    await page.fill('textarea[name="text_input_new_note"]', NOTE.content);
+    await page.click('button[name="text_input_save_new_note"]');
+    await page.waitForTimeout(1000);
+    await page.click('button[name="last"]');
+    await page.waitForTimeout(1000);
+
+    const deleteButton = page.locator('button', { hasText: 'Delete' }).last();
     await deleteButton.click();
 
-    const deletedNote = await page.locator(`text=${NOTE.title}`);
+    const deletedNote = await page.locator(`h2:has-text("${NOTE.title}")`).last();
     await expect(deletedNote).not.toBeVisible();
   });
 });
