@@ -173,8 +173,10 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
             setEmail('');
             setUserName('');
             setPassword('');
+            alert('User registered successfully');
         } catch (error) {
             console.error('Error creating user:', error);
+            alert("Error creating user");
         }
     };
 

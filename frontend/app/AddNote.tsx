@@ -69,6 +69,7 @@ const AddNote: React.FC<AddNoteProps> = ({ onAdd, onCancel, nameOfUser, emailOfU
                 <div>
                     <label>Title:</label>
                     <input
+                        name = "add_note_title"
                         type="text"
                         value={title}
                         onChange={handleTitleChange}
