@@ -6,7 +6,7 @@ const router = express.Router();
 const NOTES_PER_PAGE = 10;
 const SECRET = process.env.SECRET;
 
-const verifyToken = (req) => {
+const verifyToken = (req, author) => {
     const tokenHeader = req.headers['authorization'];
 
     if (!tokenHeader) {
@@ -15,13 +15,12 @@ const verifyToken = (req) => {
 
     const token =tokenHeader.split(' ')[1]; // extract the token itself (remove the bearer word)
     try {
-        const userData = jwt.verify(token, SECRET); // TODO - check if we need to extract data from the tokens payload. 
-        if(req.method !== 'DELETE'){ // in delete we dont get the note. we cant verify 
-        if( req.body.author.name !== userData.name){
-            throw new Error('operations on note permited only for its Author!');
+        const userDataFromToken = jwt.verify(token, SECRET); 
+        if( author.name !== userDataFromToken.name){
+            throw new Error('operations on the note permited only for its Author!');
         }
-    }
-        return userData;
+    
+        return userDataFromToken;
     } catch (error) {
         console.log(error.message)
         throw new Error('Invalid token');
@@ -54,13 +53,15 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        verifyToken(req);
+        
         const note = new Note({
             id: req.body.id,
             title: req.body.title,
             author: req.body.author,
             content: req.body.content
         });
+
+        verifyToken(req, note.author);
 
         await note.save();
         res.status(201).json(note);
@@ -82,8 +83,6 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     try {
-        verifyToken(req);
-
         const noteData = {
             id: req.body.id,
             title: req.body.title,
@@ -97,9 +96,10 @@ router.put('/:id', async (req, res) => {
             return res.status(404).json({ message: 'Note not found' });
         }
         const note = notes[0];
+        verifyToken(req, note.author);
         const updatedNote = await Note.findOneAndUpdate({ id: note.id }, noteData, { new: true });
         if (!updatedNote) {
-            return res.status(404).json({ message: 'Note not found' });
+            return res.status(404).json({ message: 'coulnt not update note in the DB' });
         }
         res.json(updatedNote);
     } catch (error) {
@@ -118,17 +118,16 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     try {
-        verifyToken(req);
-
         const index = parseInt(req.params.id, 10) - 1;
         const notes = await Note.find().skip(index).limit(1);
         if (notes.length === 0) {
             return res.status(404).json({ message: 'Note not found' });
         }
         const note = notes[0];
+        verifyToken(req, note.author);
         const result = await Note.deleteMany({ id: note.id });
         if (result.deletedCount === 0) {
-            return res.status(404).json({ message: 'Note not found' });
+            return res.status(404).json({ message: 'Error in deleting the note in the data base' });
         }
         res.status(204).send();
     } catch (error) {
