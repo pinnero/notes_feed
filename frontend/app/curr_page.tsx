@@ -45,19 +45,12 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
 
 
     useEffect(() => {
-        fetchNotes();
-    }, [currentPage]);
+        fetchNotes(false);
+    }, [currentPage, totalPages]);
     
-    const fetchNotes = async () => {
-        if (cache[currentPage]) {
-            setNotes(cache[currentPage]);
-        } else {
-            fetchNotesFromServer();
-        }
-    };
-
     const fetchNotesOnePage = async (page : number) => {
-        const start_index = (page-1)*NOTES_PER_PAGE
+        const start_index = (page-1)*NOTES_PER_PAGE;
+        console.log("fetching page " + page + " with start index " + start_index);
         try {
             const response = await axios.get(`${API_URL}?_start=${start_index}`);
             setCache(prevCache => ({...prevCache, [page]: response.data}));
@@ -70,7 +63,7 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
         }
     };
 
-    const fetchNotesFromServer = () => {
+    const fetchNotes = (resetCache: boolean) => {
         let pagesToFetch: number[] = [];
         if (totalPages <= 5) {
             return Array.from({ length: totalPages }, (_, index) => index + 1);
@@ -92,18 +85,21 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
                 currentPage,
                 currentPage + 1
             ];
+        } else{
+            pagesToFetch = [
+                currentPage - 4,
+                currentPage - 3,
+                currentPage - 2,
+                currentPage - 1,
+                currentPage
+            ]; 
         }
-        pagesToFetch = [
-            currentPage - 4,
-            currentPage - 3,
-            currentPage - 2,
-            currentPage - 1,
-            currentPage
-        ]; 
-
+        
         pagesToFetch.forEach(async pageNum => {
-            if (!cache[pageNum]) {
+            if (!cache[pageNum] || resetCache) {
                 fetchNotesOnePage(pageNum);
+            } else if (pageNum === currentPage) {
+                    setNotes(cache[pageNum]);
             }
         });
 
@@ -118,13 +114,14 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
         });
     };
 
+
     const handleNoteUpdate = () => {
-        fetchNotesFromServer();
+        fetchNotes(true);
     };
     
     const handleAddNote = () => {
         addNoteCount();
-        fetchNotesFromServer();
+        fetchNotes(true);
         setShowAddNote(false)
     }
 
@@ -134,7 +131,7 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
 
     const handleDeleteNote = () => {
         handleDelete();
-        fetchNotesFromServer();
+        fetchNotes(true);
     }
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -205,7 +202,7 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
 
     return (
         <div>
-            <div>
+            <div className={`allForms ${theme}`}>
             <h1>User registration</h1>
             {!token ? (
                 <>
