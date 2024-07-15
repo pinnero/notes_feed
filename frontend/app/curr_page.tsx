@@ -206,7 +206,7 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
     return (
         <div>
             <div>
-            <h1>User Authentication</h1>
+            <h1>User registration</h1>
             {!token ? (
                 <>
                     <form name="create_user_form" onSubmit={handleCreateUser}>
@@ -294,6 +294,7 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
                             onDelete = {handleDeleteNote}
                             dbIndex = {(index + (currentPage-1)*10) + 1}
                             nameOfUser={activeName}
+                            token = {token}
                         />
                     ))}
                 </div>

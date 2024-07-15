@@ -18,9 +18,10 @@ interface NoteProps {
     onDelete: () => void;
     dbIndex: number;
     nameOfUser: string;
+    token: string | null;
 }
 
-const Note: React.FC<NoteProps> = ({ note, onUpdate, onDelete, dbIndex, nameOfUser}) => {
+const Note: React.FC<NoteProps> = ({ note, onUpdate, onDelete, dbIndex, nameOfUser, token}) => {
     const [editing, setEditing] = useState(false);
     const [editedContent, setEditedContent] = useState(note.content);
     const theme  = useContext(ThemeContext);
@@ -31,7 +32,12 @@ const Note: React.FC<NoteProps> = ({ note, onUpdate, onDelete, dbIndex, nameOfUs
 
     const handleSave = async () => {
         try {
-            await axios.put(`http://localhost:3001/notes/${dbIndex}`, { ...note, content: editedContent });
+            await axios.put(`http://localhost:3001/notes/${dbIndex}`,
+             { ...note, content: editedContent },
+              {
+                headers: {
+                'Authorization': `Bearer ${token}` // Add the token to the headers
+            }});
             setEditing(false);
             onUpdate(); // Refresh notes after saving
         } catch (error) {
@@ -47,7 +53,10 @@ const Note: React.FC<NoteProps> = ({ note, onUpdate, onDelete, dbIndex, nameOfUs
     const handleDelete = async () => {
         console.log(dbIndex);
         try {
-            await axios.delete(`http://localhost:3001/notes/${dbIndex}`);
+            await axios.delete(`http://localhost:3001/notes/${dbIndex}`, {
+                headers: {
+                'Authorization': `Bearer ${token}` // Add the token to the headers
+            }});
             onDelete(); 
         } catch (error) {
             console.error('Error deleting note:', error);

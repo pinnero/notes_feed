@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 const NOTES_PER_PAGE = 10;
+const SECRET = process.env.SECRET;
 
 const verifyToken = (req) => {
     const tokenHeader = req.headers['authorization'];
@@ -15,11 +16,14 @@ const verifyToken = (req) => {
     const token =tokenHeader.split(' ')[1]; // extract the token itself (remove the bearer word)
     try {
         const userData = jwt.verify(token, SECRET); // TODO - check if we need to extract data from the tokens payload. 
+        if(req.method !== 'DELETE'){ // in delete we dont get the note. we cant verify 
         if( req.body.author.name !== userData.name){
             throw new Error('operations on note permited only for its Author!');
         }
+    }
         return userData;
     } catch (error) {
+        console.log(error.message)
         throw new Error('Invalid token');
     }
 };
