@@ -69,7 +69,7 @@ const Note: React.FC<NoteProps> = ({ note, onUpdate, onDelete, dbIndex, nameOfUs
 
     return (
         <div className={`note ${theme}`} id={`${dbIndex}`}>
-            <h2 className= {note.title}>{note.title}</h2>
+            <h2>{note.title}</h2>
             <small>Posted by: {note.author.name}</small>
             <small>Email: {note.author.email}</small>
             <br />

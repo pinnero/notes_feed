@@ -69,7 +69,7 @@ const AddNote: React.FC<AddNoteProps> = ({ onAdd, onCancel, nameOfUser, emailOfU
                 <div>
                     <label>Title:</label>
                     <input
-                        name = "add_note_title"
+                        name="add_note_title"
                         type="text"
                         value={title}
                         onChange={handleTitleChange}
@@ -79,6 +79,7 @@ const AddNote: React.FC<AddNoteProps> = ({ onAdd, onCancel, nameOfUser, emailOfU
                 <div>
                     <label>Name:</label>
                     <input
+                        readOnly
                         type="text"
                         value={name}
                         required
@@ -87,6 +88,7 @@ const AddNote: React.FC<AddNoteProps> = ({ onAdd, onCancel, nameOfUser, emailOfU
                 <div>
                     <label>Email:</label>
                     <input
+                        readOnly
                         type="email"
                         value={email}
                         required

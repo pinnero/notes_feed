@@ -1,15 +1,16 @@
 import { test, expect } from '@playwright/test';
+import { log } from 'console';
 
 const BASE_URL = 'http://localhost:3000';
 const USER = {
-  name: 'Test User',
-  email: 'testuser@example.com',
-  username: 'testuser',
-  password: 'password123'
+  name: 'Hayon',
+  email: 'hayon@example.com',
+  username: 'Hisi',
+  password: '1234'
 };
 const NOTE = {
-  title: 'Test Note',
-  content: 'This is a test note.'
+  title: 'Hisiiii',
+  content: 'I am the hissiiii.'
 };
 
 test.describe('Notes App', () => {
@@ -30,6 +31,26 @@ test.describe('Notes App', () => {
     await expect(logoutButton).toBeVisible();
   });
 
+  test('Delete Note', async ({ page }) => {
+    await page.goto(BASE_URL);
+    await page.fill('input[name="login_form_username"]', USER.username);
+    await page.fill('input[name="login_form_password"]', USER.password);
+    await page.click('form[name="login_form"] button[type="submit"]');
+
+    await page.click('button[name="add_new_note"]');
+    await page.fill('input[name="add_note_title"]', NOTE.title);
+    await page.fill('textarea[name="text_input_new_note"]', NOTE.content);
+    await page.click('button[name="text_input_save_new_note"]');
+    await page.waitForTimeout(1000);
+    await page.click('button[name="last"]');
+    await page.waitForTimeout(1000);
+
+    const deleteButton = await page.locator('button', { hasText: 'Delete' }).last();
+    await deleteButton.click();
+
+    const deletedNote = await page.locator(`h2:has-text("${NOTE.title}")`).last();
+    await expect(deletedNote).not.toBeVisible();
+  });
 
   test('Add Note', async ({ page }) => {
     await page.goto(BASE_URL);
@@ -63,18 +84,20 @@ test.describe('Notes App', () => {
     await page.click('button[name="last"]');
     await page.waitForTimeout(1000);
 
-    const editButton = page.locator('button', { hasText: 'Edit' }).last();
+    const editButton = await page.locator('button', { hasText: 'Edit' }).last();
     await editButton.click();
 
     const newContent = 'New content for the note.';
-    await page.fill('textarea[name="text_input-1"]', newContent);
-    await page.click('button[name="text_input_save-1"]');
+    await page.fill('textarea', newContent);
+    const saveButton = await page.locator('button', { hasText: 'Save' }).last();
+    await saveButton.click();
+    await page.waitForTimeout(1000);
 
-    const updatedNote = await page.locator(`text=${newContent}`);
+    const updatedNote = await page.locator(`p:has-text("${newContent}")`).last();
     await expect(updatedNote).toBeVisible();
   });
 
-  test('Delete Note', async ({ page }) => {
+  test('Restricted Buttons', async ({ page }) => {
     await page.goto(BASE_URL);
     await page.fill('input[name="login_form_username"]', USER.username);
     await page.fill('input[name="login_form_password"]', USER.password);
@@ -88,11 +111,15 @@ test.describe('Notes App', () => {
     await page.click('button[name="last"]');
     await page.waitForTimeout(1000);
 
-    const deleteButton = page.locator('button', { hasText: 'Delete' }).last();
-    await deleteButton.click();
+    const logoutButton = await page.locator('button[name="logout"]');
+    await logoutButton.click();
 
-    const deletedNote = await page.locator(`h2:has-text("${NOTE.title}")`).last();
-    await expect(deletedNote).not.toBeVisible();
+    const deleteButton = await page.locator('button', { hasText: 'Delete' }).last();
+    await expect(deleteButton).not.toBeVisible();
+    const editButton = await page.locator('button', { hasText: 'Edit' }).last();
+    await expect(editButton).not.toBeVisible();
+    const addButton = await page.locator('button', { hasText: 'Add New Note' }).last();
+    await expect(addButton).not.toBeVisible();
   });
 });
 

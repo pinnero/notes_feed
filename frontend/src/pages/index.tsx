@@ -2,37 +2,41 @@
 
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import Pagination from './pagination';
-import Curr_page from './curr_page';
-import './styles.css';
-import { ThemeContext } from './Theme';
+import Pagination from '../app/pagination';
+import Curr_page from '../app/curr_page';
+import '../app/styles.css';
+import { ThemeContext } from '../app/Theme';
+
+interface PageProps {
+    totalCount: number;
+}
 
 const NOTES_PER_PAGE = 10;
 const API_URL_notesCount = 'http://localhost:3001/countNotes';
 
-const App = () => {
-    const [numOfPages, setNumOfPages] = useState(1);
+const App: React.FC<PageProps> = ({ totalCount }) => {
+    const [numOfPages, setNumOfPages] = useState(Math.ceil(totalCount/NOTES_PER_PAGE));
     const [currentPage, setCurrentPage] = useState(1);
     const [isLight, setIsLight] = useState(true);
-    const totalNotesCount = useRef(0);
+    const totalNotesCount = useRef(totalCount);
 
     const theme = isLight ? "light" : "dark";
 
-    const fetchTotalCount = async () => {
-        try {
-            const response = await axios.get(API_URL_notesCount);
-            const totalCount = response.data.totalNotes;
-            console.log('Total count:', totalCount);
-            setNumOfPages(Math.ceil(parseInt(totalCount)/NOTES_PER_PAGE));
-            totalNotesCount.current = totalCount;
-        } catch (error) {
-            console.error('Error fetching total count:', error);
-        }
-    };
+    // const fetchTotalCount = async () => {
+    //     try {
+    //         const response = await axios.get(API_URL_notesCount);
+    //         const totalCount = response.data.totalNotes;
+    //         console.log('Total count:', totalCount);
+    //         setNumOfPages(Math.ceil(parseInt(totalCount)/NOTES_PER_PAGE));
+    //         totalNotesCount.current = totalCount;
+    //     } catch (error) {
+    //         console.error('Error fetching total count:', error);
+    //     }
+    // };
 
-    useEffect(() => {
-        fetchTotalCount();
-    }, []);
+    // useEffect(() => {
+    //     fetchTotalCount();
+    // }, []);
 
     const addNoteCount = () => {
         totalNotesCount.current++;
@@ -84,6 +88,16 @@ const App = () => {
             </div>
         </ThemeContext.Provider>
     );
+};
+
+export async function getStaticProps() {
+    const response = await axios.get(API_URL_notesCount);
+    const totalCount = response.data.totalNotes;
+    return {
+        props: {
+            totalCount,
+        },
+    };
 };
 
 export default App;

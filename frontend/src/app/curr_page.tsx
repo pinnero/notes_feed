@@ -173,10 +173,8 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
             setEmail('');
             setUserName('');
             setPassword('');
-            alert('User registered successfully');
         } catch (error) {
             console.error('Error creating user:', error);
-            alert("Error creating user");
         }
     };
 
@@ -203,6 +201,8 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
         setToken(null);
         setActiveName('');
         setActiveEmail('');
+        setPasswordLogin('');
+        setUserNameLogin('');
     };
 
     return (
@@ -306,8 +306,10 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
                             onCancel = {handleCancelNote}
                             nameOfUser = {activeName}
                             emailOfUser = {activeEmail}
-                            token = {token}/>  :  <button  onClick={()=>setShowAddNote(!showAddNote)} 
-                            name="add_new_note">Add Note</button>
+                            token = {token}/>  :  <button  
+                                name="add_new_note"
+                                onClick={()=>setShowAddNote(!showAddNote)} 
+                            >Add Note</button>
                         )
                     }
                 </div>
