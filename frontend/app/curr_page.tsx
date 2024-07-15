@@ -190,6 +190,9 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
             console.log(response.data.name);
             setActiveEmail(response.data.email);
         } catch (error) {
+            setPasswordLogin('');
+            setUserNameLogin('');
+            alert('wrong username or password');
             console.error('Error logging in:', error);
         }
     };
