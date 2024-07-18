@@ -276,7 +276,7 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
                                 required
                             />
                         </div>
-                        <button type="submit">Login</button>
+                        <button name="login_form_login" type="submit">Login</button>
                     </form>
                 </>
             ) : (
