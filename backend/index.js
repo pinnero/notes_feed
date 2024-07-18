@@ -128,7 +128,7 @@ app.delete('/notes/:id', async (req, res) => {
     }
 });
 
-app.get('/notesCount', async (req, res) => {
+app.get('/Count', async (req, res) => {
     try {
         const count = await Note.countDocuments();
         res.json({ totalNotes: count });
