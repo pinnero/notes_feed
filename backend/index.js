@@ -3,6 +3,11 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import fs from 'fs';
 import 'dotenv/config';
+import notesRouter from './routes/notes.js';
+import usersRouter from './routes/users.js';
+import loginRouter from './routes/login.js';
+import countNotesRouter from './routes/count.js'
+
 
 const MONGODB_URL = process.env.MONGODB_CONNECTION_URL;
 const app = express();
@@ -33,107 +38,11 @@ mongoose.connect(MONGODB_URL)
 })
 .catch((err) => console.error('Error connecting to MongoDB:', err));
 
-const noteSchema = new mongoose.Schema({
-    id: Number,
-    title: String,
-    author : {
-        name: String,
-        email: String
-    },
-    content: String
-});
+app.use('/notes', notesRouter);
+app.use('/users', usersRouter);
+app.use('/login', loginRouter);
+app.use('/count', countNotesRouter);
 
-const Note = mongoose.model('Note', noteSchema);
 
-const NOTES_PER_PAGE = 10;
 
-app.get('/notes', async (req, res) => {
-    const start_index = parseInt(req.query._start) || 0;
-    const limit = NOTES_PER_PAGE;
-    try {
-        const notes = await Note.find().skip(start_index).limit(limit);
-        res.json(notes);
-    } catch (error) {
-        res.status(500).json({ error: 'Error fetching notes' });
-    }
-});
-
-app.get('/notes/:id', async (req, res) => {
-    try {
-        const index = parseInt(req.params.id, 10) - 1;
-        const note = await Note.find().skip(index).limit(1);
-        if (note.length === 0 || !note) {
-            return res.status(404).json({ error: 'Note not found' });
-        }
-        res.json(note);
-    } catch (error) {
-        res.status(500).json({ error: 'Error fetching note' });
-    }
-});
-
-app.post('/notes', async (req, res) => {
-    const note = new Note({
-        id: req.body.id,
-        title: req.body.title,
-        author: req.body.author,
-        content: req.body.content
-    });
-    
-    note.save().then(() => {
-        res.status(201);
-        res.json(note);
-    }).catch((error) => res.status(500).json({ error: 'Error fetching note' }))
-});
-
-app.put('/notes/:id', async (req, res) => {
-    const noteData = {
-        id: req.body.id,
-        title: req.body.title,
-        author: req.body.author,
-        content: req.body.content
-    };
-
-    try {
-        const index = parseInt(req.params.id, 10) - 1;
-        const notes = await Note.find().skip(index).limit(1);
-        if(notes.length === 0){
-            return res.status(404).json({ message: 'Note not found' });
-        }
-        const note = notes[0];
-        const updatedNote = await Note.findOneAndUpdate({ id: note.id }, noteData, { new: true });
-        if (!updatedNote) {
-            return res.status(404).json({ message: 'Note not found' });
-        }
-        res.json(updatedNote);
-    } catch (error) {
-        res.status(500).json({ error: 'Error updating note' });
-    }
-});
-
-app.delete('/notes/:id', async (req, res) => {
-    try {
-        const index = parseInt(req.params.id, 10) - 1;
-        const notes = await Note.find().skip(index).limit(1);
-        if(notes.length === 0){
-            return res.status(404).json({ message: 'Note not found' });
-        }
-        const note = notes[0];
-        const result = await Note.deleteMany({ id: note.id });
-        if (result.deletedCount === 0) {
-            return res.status(404).json({ message: 'Note not found' });
-        }
-        res.status(204).send();
-    } catch (error) {
-        res.status(500).json({ error: 'Error deleting note' });
-    }
-});
-
-app.get('/Count', async (req, res) => {
-    try {
-        const count = await Note.countDocuments();
-        res.json({ totalNotes: count });
-    } catch (error) {
-        res.status(500).json({ error: 'Error fetching total notes count' });
-    }
-});
 
