@@ -22,22 +22,6 @@ const App: React.FC<PageProps> = ({ totalCount }) => {
 
     const theme = isLight ? "light" : "dark";
 
-    // const fetchTotalCount = async () => {
-    //     try {
-    //         const response = await axios.get(API_URL_notesCount);
-    //         const totalCount = response.data.totalNotes;
-    //         console.log('Total count:', totalCount);
-    //         setNumOfPages(Math.ceil(parseInt(totalCount)/NOTES_PER_PAGE));
-    //         totalNotesCount.current = totalCount;
-    //     } catch (error) {
-    //         console.error('Error fetching total count:', error);
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     fetchTotalCount();
-    // }, []);
-
     const addNoteCount = () => {
         totalNotesCount.current++;
         setNumOfPages(Math.ceil(totalNotesCount.current / NOTES_PER_PAGE));
