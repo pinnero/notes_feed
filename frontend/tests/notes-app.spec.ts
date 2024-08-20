@@ -1,5 +1,21 @@
 import { test, expect } from '@playwright/test';
 import { log } from 'console';
+import { exec, ChildProcess } from 'child_process';
+
+let serverProcess: ChildProcess;
+
+test.beforeAll(async () => {
+  serverProcess = exec('npm run dev');
+
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+});
+
+test.afterAll(async () => {
+  if (serverProcess) {
+    serverProcess.kill();
+    console.log('Dev server stopped');
+  }
+});
 
 const BASE_URL = 'http://localhost:3000';
 const USER = {
