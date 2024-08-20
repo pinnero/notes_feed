@@ -3,14 +3,19 @@ import { log } from 'console';
 
 const BASE_URL = 'http://localhost:3000';
 const USER = {
-  name: 'Hayon',
-  email: 'hayon@example.com',
-  username: 'Hisi',
+  name: 'Yuvi',
+  email: 'Yuvyuv@example.com',
+  username: 'yuvi',
   password: '1234'
 };
 const NOTE = {
-  title: 'Hisiiii',
+  title: 'Pinnero Note',
   content: 'I am the hissiiii.'
+};
+
+const TESTNOTES = {
+  title: 'Test Note',
+  content: 'This is a test note.'
 };
 
 test.describe('Notes App', () => {
@@ -21,10 +26,19 @@ test.describe('Notes App', () => {
     await page.fill('input[name="create_user_form_username"]', USER.username);
     await page.fill('input[name="create_user_form_password"]', USER.password);
     await page.click('button[name="create_user_form_create_user"]');
-    // now, try to login
+    //Now, try to login
     await page.fill('input[name="login_form_username"]', USER.username);
     await page.fill('input[name="login_form_password"]', USER.password);
     await page.click('form[name="login_form"] button[type="submit"]');
+
+    //Add 15 notes so the database is not empty
+    for (let i = 1; i < 16; i++) {
+      await page.click('button[name="add_new_note"]');
+      await page.fill('input[name="add_note_title"]', TESTNOTES.title + " " + i);
+      await page.fill('textarea[name="text_input_new_note"]', TESTNOTES.content + " " + i);
+      await page.click('button[name="text_input_save_new_note"]');
+      await page.waitForTimeout(200);
+  }
 
 
     const logoutButton = await page.locator('button[name="logout"]');
@@ -122,4 +136,3 @@ test.describe('Notes App', () => {
     await expect(addButton).not.toBeVisible();
   });
 });
-

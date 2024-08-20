@@ -66,7 +66,9 @@ const Curr_page: React.FC<PageProps>  = ({currentPage, handleDelete, addNoteCoun
     const fetchNotes = (resetCache: boolean) => {
         let pagesToFetch: number[] = [];
         if (totalPages <= 5) {
-            return Array.from({ length: totalPages }, (_, index) => index + 1);
+            for (let i = 1; i <= totalPages; i++) {
+                pagesToFetch.push(i);
+            }
         } else if (currentPage < 3) {
             pagesToFetch = [1, 2, 3, 4, 5];
         } else if (currentPage <= totalPages - 2) {
